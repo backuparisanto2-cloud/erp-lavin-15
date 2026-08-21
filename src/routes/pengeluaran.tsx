@@ -43,6 +43,7 @@ import {
   updateExpense,
 } from "@/lib/expenses";
 import { downloadSimplePdf } from "@/lib/pdf-report";
+import { IfCanDelete } from "@/components/IfCanDelete";
 
 
 export const Route = createFileRoute("/pengeluaran")({
@@ -300,27 +301,29 @@ function ExpensesPage() {
                         </Button>
                       }
                     />
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="outline" size="icon" aria-label="Hapus">
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Hapus pengeluaran?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            “{expense.name}” akan dihapus permanen.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Batal</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => remove.mutate(expense.id)}>
-                            Hapus
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <IfCanDelete>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" size="icon" aria-label="Hapus">
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Hapus pengeluaran?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              “{expense.name}” akan dihapus permanen.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Batal</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => remove.mutate(expense.id)}>
+                              Hapus
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </IfCanDelete>
                   </div>
                 </div>
               </div>

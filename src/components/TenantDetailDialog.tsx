@@ -13,6 +13,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { formatRupiah, formatTanggal } from "@/lib/expenses";
 import { dueInfo, totalPaid, type TenantProfile } from "@/lib/tenants";
+import { IfCanDelete } from "@/components/IfCanDelete";
 
 function Row({ label, value }: { label: string; value: React.ReactNode }) {
   return (
@@ -235,14 +236,16 @@ export function TenantDetailDialog({
                           <p className="mt-1 text-xs text-muted-foreground">{payment.notes}</p>
                         ) : null}
                       </div>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label="Hapus pembayaran"
-                        onClick={() => onDeletePayment(payment.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <IfCanDelete>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          aria-label="Hapus pembayaran"
+                          onClick={() => onDeletePayment(payment.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </IfCanDelete>
                     </div>
                     {payment.attachments.length ? (
                       <div className="mt-2 flex flex-wrap gap-2">

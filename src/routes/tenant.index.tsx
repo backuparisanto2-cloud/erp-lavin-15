@@ -27,6 +27,7 @@ import { exportTenantHistory } from "@/lib/history-export";
 import { roomsQuery } from "@/lib/inventory";
 import { downloadSimplePdf } from "@/lib/pdf-report";
 import {
+import { IfCanDelete } from "@/components/IfCanDelete";
   TENANT_STATUSES,
   addTenantPayment,
   deleteTenantPayment,
@@ -342,18 +343,20 @@ function TenantPage() {
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    aria-label="Hapus tenant"
-                    onClick={() => {
-                      if (confirm(`Hapus data tenant ${tenant.name}?`)) {
-                        deleteMutation.mutate(tenant.id);
-                      }
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <IfCanDelete>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      aria-label="Hapus tenant"
+                      onClick={() => {
+                        if (confirm(`Hapus data tenant ${tenant.name}?`)) {
+                          deleteMutation.mutate(tenant.id);
+                        }
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </IfCanDelete>
                 </div>
               </li>
             );

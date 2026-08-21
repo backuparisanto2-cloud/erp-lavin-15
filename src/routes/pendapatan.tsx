@@ -40,6 +40,7 @@ import {
 import { formatRupiah, formatTanggal } from "@/lib/expenses";
 import { downloadSimplePdf } from "@/lib/pdf-report";
 import {
+import { IfCanDelete } from "@/components/IfCanDelete";
   PAYMENT_METHODS,
   PERIOD_TYPES,
   addIncome,
@@ -402,27 +403,29 @@ function IncomePage() {
                       </Button>
                     }
                   />
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="outline" size="icon" aria-label="Hapus penghuni">
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Hapus penghuni?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          “{tenant.name}” beserta riwayat pembayarannya akan dihapus permanen.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => removeTenant.mutate(tenant.id)}>
-                          Hapus
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <IfCanDelete>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" size="icon" aria-label="Hapus penghuni">
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Hapus penghuni?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            “{tenant.name}” beserta riwayat pembayarannya akan dihapus permanen.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Batal</AlertDialogCancel>
+                          <AlertDialogAction onClick={() => removeTenant.mutate(tenant.id)}>
+                            Hapus
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </IfCanDelete>
                 </div>
               </li>
             ))}
@@ -484,30 +487,32 @@ function IncomePage() {
                           </Button>
                         }
                       />
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="icon" aria-label="Hapus">
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Hapus pendapatan?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Pembayaran <strong>{income.tenant_name}</strong> tanggal{" "}
-                              {formatTanggal(income.payment_date)} sebesar{" "}
-                              {formatRupiah(income.amount)} ({income.period_type}) akan dihapus
-                              permanen. Tindakan ini tidak bisa dibatalkan.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Batal</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => removeIncome.mutate(income.id)}>
-                              Hapus
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                      <IfCanDelete>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="outline" size="icon" aria-label="Hapus">
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Hapus pendapatan?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Pembayaran <strong>{income.tenant_name}</strong> tanggal{" "}
+                                {formatTanggal(income.payment_date)} sebesar{" "}
+                                {formatRupiah(income.amount)} ({income.period_type}) akan dihapus
+                                permanen. Tindakan ini tidak bisa dibatalkan.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Batal</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => removeIncome.mutate(income.id)}>
+                                Hapus
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </IfCanDelete>
                     </div>
                   </div>
                 </div>
@@ -593,29 +598,31 @@ function IncomePage() {
                           </Button>
                         }
                       />
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="icon" aria-label="Hapus">
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Hapus pendapatan lain-lain?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              <strong>{row.name}</strong> tanggal {formatTanggal(row.income_date)}{" "}
-                              sebesar {formatRupiah(row.amount)} akan dihapus permanen. Tindakan ini
-                              tidak bisa dibatalkan.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Batal</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => removeOther.mutate(row.id)}>
-                              Hapus
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                      <IfCanDelete>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="outline" size="icon" aria-label="Hapus">
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Hapus pendapatan lain-lain?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                <strong>{row.name}</strong> tanggal {formatTanggal(row.income_date)}{" "}
+                                sebesar {formatRupiah(row.amount)} akan dihapus permanen. Tindakan ini
+                                tidak bisa dibatalkan.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Batal</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => removeOther.mutate(row.id)}>
+                                Hapus
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </IfCanDelete>
                     </div>
                   </div>
                 </div>

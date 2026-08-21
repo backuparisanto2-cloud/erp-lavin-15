@@ -33,6 +33,7 @@ import {
   updateSharedItem,
 } from "@/lib/inventory";
 import { formInitial, itemPayload } from "@/lib/item-payload";
+import { IfCanDelete } from "@/components/IfCanDelete";
 
 export const Route = createFileRoute("/kelola")({
   head: () => ({
@@ -196,20 +197,22 @@ function RoomsTab() {
                         }
                       }}
                     />
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      aria-label={`Hapus kamar ${room.number}`}
-                      onClick={() => {
-                        const n = counts.get(room.id) ?? 0;
-                        const ok = window.confirm(
-                          `Hapus kamar ${room.number}? ${n} unit barang di dalamnya ikut terhapus dan tidak bisa dikembalikan.`,
-                        );
-                        if (ok) remove.mutate(room.id);
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
+                    <IfCanDelete>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        aria-label={`Hapus kamar ${room.number}`}
+                        onClick={() => {
+                          const n = counts.get(room.id) ?? 0;
+                          const ok = window.confirm(
+                            `Hapus kamar ${room.number}? ${n} unit barang di dalamnya ikut terhapus dan tidak bisa dikembalikan.`,
+                          );
+                          if (ok) remove.mutate(room.id);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </IfCanDelete>
                   </div>
                 </td>
               </tr>
@@ -446,24 +449,26 @@ function ItemsTab() {
                         }
                       }}
                     />
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      aria-label={`Hapus ${item.name}`}
-                      onClick={async () => {
-                        if (!window.confirm(`Hapus ${item.name}?`)) return;
-                        try {
-                          if (item.kind === "shared") await deleteSharedItem(item.id);
-                          else await deleteRoomItem(item.id);
-                          toast.success("Barang dihapus");
-                          refresh();
-                        } catch (e) {
-                          toast.error((e as Error).message);
-                        }
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4 text-destructive" />
-                    </Button>
+                    <IfCanDelete>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        aria-label={`Hapus ${item.name}`}
+                        onClick={async () => {
+                          if (!window.confirm(`Hapus ${item.name}?`)) return;
+                          try {
+                            if (item.kind === "shared") await deleteSharedItem(item.id);
+                            else await deleteRoomItem(item.id);
+                            toast.success("Barang dihapus");
+                            refresh();
+                          } catch (e) {
+                            toast.error((e as Error).message);
+                          }
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                      </Button>
+                    </IfCanDelete>
                   </div>
                 </td>
               </tr>
