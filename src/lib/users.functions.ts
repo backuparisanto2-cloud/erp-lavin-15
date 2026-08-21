@@ -81,3 +81,27 @@ export const setUserRole = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const deleteAppUser = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { userId: string }) => {
+    if (!input?.userId) throw new Error("Pengguna tidak valid");
+    return input;
+  })
+  .handler(async ({ data, context }) => {
+    if (data.userId === context.userId) throw new Error("Tidak bisa menghapus akun sendiri");
+
+    const { data: rows } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId);
+    const privileged = (rows ?? []).some((r) =>
+      ["admin", "owner", "finance"].includes(r.role as string),
+    );
+    if (!privileged) throw new Error("Anda tidak berhak menghapus pengguna");
+
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(data.userId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });

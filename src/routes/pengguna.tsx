@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { UserPlus, ShieldCheck } from "lucide-react";
+import { UserPlus, ShieldCheck, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/AppShell";
@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { ROLE_LABELS, useAuth, type AppRole } from "@/lib/auth";
-import { createAppUser, setUserRole } from "@/lib/users.functions";
+import { createAppUser, deleteAppUser, setUserRole } from "@/lib/users.functions";
 
 export const Route = createFileRoute("/pengguna")({
   head: () => ({
@@ -36,10 +36,11 @@ const ROLES: AppRole[] = ["admin", "owner", "finance", "employee"];
 type UserRow = { id: string; full_name: string; email: string | null; role: AppRole | null };
 
 function PenggunaPage() {
-  const { canManageUsers } = useAuth();
+  const { canManageUsers, userId } = useAuth();
   const queryClient = useQueryClient();
   const createFn = useServerFn(createAppUser);
   const roleFn = useServerFn(setUserRole);
+  const deleteFn = useServerFn(deleteAppUser);
 
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
@@ -83,6 +84,15 @@ function PenggunaPage() {
       void queryClient.invalidateQueries({ queryKey: ["app-users"] });
     },
     onError: (error: Error) => toast.error("Gagal mengubah level", { description: error.message }),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteFn({ data: { userId: id } }),
+    onSuccess: () => {
+      toast.success("Pengguna dihapus");
+      void queryClient.invalidateQueries({ queryKey: ["app-users"] });
+    },
+    onError: (error: Error) => toast.error("Gagal menghapus", { description: error.message }),
   });
 
   if (!canManageUsers) {
@@ -177,6 +187,20 @@ function PenggunaPage() {
                     </option>
                   ))}
                 </select>
+                {user.id === userId ? null : (
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    aria-label={`Hapus ${user.email}`}
+                    onClick={() => {
+                      if (window.confirm(`Hapus pengguna ${user.email}?`)) {
+                        deleteMutation.mutate(user.id);
+                      }
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                )}
               </li>
             ))}
             {usersQuery.data?.length === 0 ? (
