@@ -17,6 +17,7 @@ import { Route as KelolaRouteImport } from './routes/kelola'
 import { Route as LaporanRouteImport } from './routes/laporan'
 import { Route as PendapatanRouteImport } from './routes/pendapatan'
 import { Route as PengeluaranRouteImport } from './routes/pengeluaran'
+import { Route as PenggunaRouteImport } from './routes/pengguna'
 import { Route as KamarIndexRouteImport } from './routes/kamar.index'
 import { Route as KamarNomorRouteImport } from './routes/kamar.$nomor'
 import { Route as TenantIndexRouteImport } from './routes/tenant.index'
@@ -62,6 +63,11 @@ const PengeluaranRoute = PengeluaranRouteImport.update({
   path: '/pengeluaran',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PenggunaRoute = PenggunaRouteImport.update({
+  id: '/pengguna',
+  path: '/pengguna',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const KamarIndexRoute = KamarIndexRouteImport.update({
   id: '/kamar/',
   path: '/kamar/',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/laporan': typeof LaporanRoute
   '/pendapatan': typeof PendapatanRoute
   '/pengeluaran': typeof PengeluaranRoute
+  '/pengguna': typeof PenggunaRoute
   '/kamar/$nomor': typeof KamarNomorRoute
   '/tenant/$id': typeof TenantIdRoute
   '/kamar/': typeof KamarIndexRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/laporan': typeof LaporanRoute
   '/pendapatan': typeof PendapatanRoute
   '/pengeluaran': typeof PengeluaranRoute
+  '/pengguna': typeof PenggunaRoute
   '/kamar/$nomor': typeof KamarNomorRoute
   '/tenant/$id': typeof TenantIdRoute
   '/kamar': typeof KamarIndexRoute
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/laporan': typeof LaporanRoute
   '/pendapatan': typeof PendapatanRoute
   '/pengeluaran': typeof PengeluaranRoute
+  '/pengguna': typeof PenggunaRoute
   '/kamar/$nomor': typeof KamarNomorRoute
   '/tenant/$id': typeof TenantIdRoute
   '/kamar/': typeof KamarIndexRoute
@@ -137,6 +146,7 @@ export interface FileRouteTypes {
     | '/laporan'
     | '/pendapatan'
     | '/pengeluaran'
+    | '/pengguna'
     | '/kamar/$nomor'
     | '/tenant/$id'
     | '/kamar/'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/laporan'
     | '/pendapatan'
     | '/pengeluaran'
+    | '/pengguna'
     | '/kamar/$nomor'
     | '/tenant/$id'
     | '/kamar'
@@ -165,6 +176,7 @@ export interface FileRouteTypes {
     | '/laporan'
     | '/pendapatan'
     | '/pengeluaran'
+    | '/pengguna'
     | '/kamar/$nomor'
     | '/tenant/$id'
     | '/kamar/'
@@ -180,6 +192,7 @@ export interface RootRouteChildren {
   LaporanRoute: typeof LaporanRoute
   PendapatanRoute: typeof PendapatanRoute
   PengeluaranRoute: typeof PengeluaranRoute
+  PenggunaRoute: typeof PenggunaRoute
   KamarNomorRoute: typeof KamarNomorRoute
   TenantIdRoute: typeof TenantIdRoute
   KamarIndexRoute: typeof KamarIndexRoute
@@ -244,6 +257,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PengeluaranRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pengguna': {
+      id: '/pengguna'
+      path: '/pengguna'
+      fullPath: '/pengguna'
+      preLoaderRoute: typeof PenggunaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/kamar/': {
       id: '/kamar/'
       path: '/kamar'
@@ -284,6 +304,7 @@ const rootRouteChildren: RootRouteChildren = {
   LaporanRoute: LaporanRoute,
   PendapatanRoute: PendapatanRoute,
   PengeluaranRoute: PengeluaranRoute,
+  PenggunaRoute: PenggunaRoute,
   KamarNomorRoute: KamarNomorRoute,
   TenantIdRoute: TenantIdRoute,
   KamarIndexRoute: KamarIndexRoute,
