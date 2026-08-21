@@ -30,6 +30,7 @@ import {
 } from "@/lib/inventory";
 import { formInitial, itemPayload } from "@/lib/item-payload";
 import { floorKeyForRoom } from "@/lib/floorplan";
+import { IfCanDelete } from "@/components/IfCanDelete";
 
 export const Route = createFileRoute("/kamar/$nomor")({
   head: ({ params }) => ({
@@ -193,41 +194,43 @@ function RoomDetail() {
                     }}
                   />
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label={`Hapus ${item.name}`}
-                        className="h-11 w-11 text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="border-gold-line">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="font-display text-2xl">
-                          Hapus {item.name}?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Data barang ini akan dihapus permanen dari kamar {room.number}.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() =>
-                            mutate.mutate(async () => {
-                              await deleteRoomItem(item.id);
-                              toast.success("Barang dihapus");
-                            })
-                          }
+                  <IfCanDelete>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          aria-label={`Hapus ${item.name}`}
+                          className="h-11 w-11 text-destructive"
                         >
-                          Hapus
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="border-gold-line">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="font-display text-2xl">
+                            Hapus {item.name}?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Data barang ini akan dihapus permanen dari kamar {room.number}.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Batal</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() =>
+                              mutate.mutate(async () => {
+                                await deleteRoomItem(item.id);
+                                toast.success("Barang dihapus");
+                              })
+                            }
+                          >
+                            Hapus
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </IfCanDelete>
                 </>
               }
             />

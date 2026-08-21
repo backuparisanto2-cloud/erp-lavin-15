@@ -43,6 +43,7 @@ import {
   type TenantProfilePayload,
   type TenantVehicle,
 } from "@/lib/tenants";
+import { IfCanDelete } from "@/components/IfCanDelete";
 
 
 export const Route = createFileRoute("/tenant/")({
@@ -342,18 +343,20 @@ function TenantPage() {
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    aria-label="Hapus tenant"
-                    onClick={() => {
-                      if (confirm(`Hapus data tenant ${tenant.name}?`)) {
-                        deleteMutation.mutate(tenant.id);
-                      }
-                    }}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <IfCanDelete>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      aria-label="Hapus tenant"
+                      onClick={() => {
+                        if (confirm(`Hapus data tenant ${tenant.name}?`)) {
+                          deleteMutation.mutate(tenant.id);
+                        }
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </IfCanDelete>
                 </div>
               </li>
             );

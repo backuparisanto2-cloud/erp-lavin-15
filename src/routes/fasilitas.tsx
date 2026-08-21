@@ -37,6 +37,7 @@ import {
 import { downloadSimplePdf } from "@/lib/pdf-report";
 
 import { formInitial, itemPayload } from "@/lib/item-payload";
+import { IfCanDelete } from "@/components/IfCanDelete";
 
 
 export const Route = createFileRoute("/fasilitas")({
@@ -344,41 +345,43 @@ function SharedFacilities() {
                     }}
                   />
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        aria-label={`Hapus ${item.name}`}
-                        className="h-11 w-11 text-destructive"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="border-gold-line">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle className="font-display text-2xl">
-                          Hapus {item.name}?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Fasilitas ini akan dihapus permanen dari daftar.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Batal</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() =>
-                            mutate.mutate(async () => {
-                              await deleteSharedItem(item.id);
-                              toast.success("Fasilitas dihapus");
-                            })
-                          }
+                  <IfCanDelete>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          aria-label={`Hapus ${item.name}`}
+                          className="h-11 w-11 text-destructive"
                         >
-                          Hapus
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent className="border-gold-line">
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="font-display text-2xl">
+                            Hapus {item.name}?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Fasilitas ini akan dihapus permanen dari daftar.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Batal</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() =>
+                              mutate.mutate(async () => {
+                                await deleteSharedItem(item.id);
+                                toast.success("Fasilitas dihapus");
+                              })
+                            }
+                          >
+                            Hapus
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </IfCanDelete>
                 </>
               }
             />
