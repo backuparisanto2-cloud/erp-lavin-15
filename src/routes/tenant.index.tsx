@@ -27,7 +27,6 @@ import { exportTenantHistory } from "@/lib/history-export";
 import { roomsQuery } from "@/lib/inventory";
 import { downloadSimplePdf } from "@/lib/pdf-report";
 import {
-import { IfCanDelete } from "@/components/IfCanDelete";
   TENANT_STATUSES,
   addTenantPayment,
   deleteTenantPayment,
@@ -44,6 +43,7 @@ import { IfCanDelete } from "@/components/IfCanDelete";
   type TenantProfilePayload,
   type TenantVehicle,
 } from "@/lib/tenants";
+import { IfCanDelete } from "@/components/IfCanDelete";
 
 
 export const Route = createFileRoute("/tenant/")({

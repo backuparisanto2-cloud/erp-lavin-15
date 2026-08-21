@@ -40,7 +40,6 @@ import {
 import { formatRupiah, formatTanggal } from "@/lib/expenses";
 import { downloadSimplePdf } from "@/lib/pdf-report";
 import {
-import { IfCanDelete } from "@/components/IfCanDelete";
   PAYMENT_METHODS,
   PERIOD_TYPES,
   addIncome,
@@ -56,6 +55,7 @@ import { IfCanDelete } from "@/components/IfCanDelete";
   updateOtherIncome,
   updateTenant,
 } from "@/lib/income";
+import { IfCanDelete } from "@/components/IfCanDelete";
 
 export const Route = createFileRoute("/pendapatan")({
   head: () => ({
