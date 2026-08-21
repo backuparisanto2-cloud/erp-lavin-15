@@ -20,6 +20,10 @@ import {
   ChevronRight,
   ScrollText,
   ExternalLink,
+  LogOut,
+  UserCog,
+  History,
+  Loader2,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
@@ -46,6 +50,8 @@ import {
 import { GuideDialog } from "@/components/GuideDialog";
 import { buildCrumbs } from "@/lib/breadcrumbs";
 import { TEXT_SIZES, useTextSize } from "@/lib/text-size";
+import { LoginScreen } from "@/components/LoginScreen";
+import { ROLE_LABELS, useAuth } from "@/lib/auth";
 
 const nav = [
   { to: "/", label: "Ringkasan", icon: LayoutDashboard },
@@ -166,6 +172,19 @@ export function AppShell({
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const { loading, session, email, fullName, role, canManageUsers, signOut } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (!session) {
+    return <LoginScreen />;
+  }
 
   return (
     <div className="min-h-screen bg-background pb-10">
@@ -253,6 +272,34 @@ export function AppShell({
                 </DropdownMenuContent>
               </DropdownMenu>
             </nav>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="hidden items-center gap-1 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground md:flex">
+                {role ? ROLE_LABELS[role] : "Akun"} <ChevronDown className="h-3.5 w-3.5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-60">
+                <div className="px-2 py-2">
+                  <p className="truncate text-sm font-medium">{fullName || email}</p>
+                  <p className="truncate text-xs text-muted-foreground">{email}</p>
+                </div>
+                {canManageUsers ? (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link to="/pengguna" className="flex items-center gap-2">
+                        <UserCog className="h-4 w-4" /> Pengguna
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/audit" className="flex items-center gap-2">
+                        <History className="h-4 w-4" /> Audit Log
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                ) : null}
+                <DropdownMenuItem onSelect={() => void signOut()} className="flex items-center gap-2">
+                  <LogOut className="h-4 w-4" /> Keluar
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <div className="hidden md:block">
               <TextSizeControl compact />
             </div>
@@ -359,8 +406,40 @@ export function AppShell({
                     </CollapsibleContent>
                   </Collapsible>
                 </nav>
-                <div className="shrink-0 border-t border-gold-line px-5 py-4">
+                <div className="shrink-0 space-y-3 border-t border-gold-line px-5 py-4">
+                  {canManageUsers ? (
+                    <div className="flex flex-col">
+                      <Link
+                        to="/pengguna"
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-3 rounded-md px-1 py-2 text-sm text-muted-foreground hover:bg-accent"
+                      >
+                        <UserCog className="h-4 w-4" /> Pengguna
+                      </Link>
+                      <Link
+                        to="/audit"
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-3 rounded-md px-1 py-2 text-sm text-muted-foreground hover:bg-accent"
+                      >
+                        <History className="h-4 w-4" /> Audit Log
+                      </Link>
+                    </div>
+                  ) : null}
                   <TextSizeControl />
+                  <div className="border-t border-gold-line pt-3">
+                    <p className="truncate text-sm font-medium">{fullName || email}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {email} · {role ? ROLE_LABELS[role] : "-"}
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-2 w-full"
+                      onClick={() => void signOut()}
+                    >
+                      <LogOut className="mr-2 h-4 w-4" /> Keluar
+                    </Button>
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>
