@@ -102,6 +102,9 @@ export const deleteAppUser = createServerFn({ method: "POST" })
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.auth.admin.deleteUser(data.userId);
-    if (error) throw new Error(error.message);
+    // Abaikan galat "user tidak ditemukan" agar sisa data profil tetap dibersihkan.
+    if (error && !/not found/i.test(error.message)) throw new Error(error.message);
+    await supabaseAdmin.from("user_roles").delete().eq("user_id", data.userId);
+    await supabaseAdmin.from("profiles").delete().eq("id", data.userId);
     return { ok: true };
   });
