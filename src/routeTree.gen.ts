@@ -23,6 +23,7 @@ import { Route as KamarIndexRouteImport } from './routes/kamar.index'
 import { Route as KamarNomorRouteImport } from './routes/kamar.$nomor'
 import { Route as TenantIndexRouteImport } from './routes/tenant.index'
 import { Route as TenantIdRouteImport } from './routes/tenant.$id'
+import { Route as ApiPublicSeedDemoRouteImport } from './routes/api/public/seed-demo'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -94,6 +95,11 @@ const TenantIdRoute = TenantIdRouteImport.update({
   path: '/tenant/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicSeedDemoRoute = ApiPublicSeedDemoRouteImport.update({
+  id: '/api/public/seed-demo',
+  path: '/api/public/seed-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/tenant/$id': typeof TenantIdRoute
   '/kamar/': typeof KamarIndexRoute
   '/tenant/': typeof TenantIndexRoute
+  '/api/public/seed-demo': typeof ApiPublicSeedDemoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/tenant/$id': typeof TenantIdRoute
   '/kamar': typeof KamarIndexRoute
   '/tenant': typeof TenantIndexRoute
+  '/api/public/seed-demo': typeof ApiPublicSeedDemoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/tenant/$id': typeof TenantIdRoute
   '/kamar/': typeof KamarIndexRoute
   '/tenant/': typeof TenantIndexRoute
+  '/api/public/seed-demo': typeof ApiPublicSeedDemoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/tenant/$id'
     | '/kamar/'
     | '/tenant/'
+    | '/api/public/seed-demo'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/tenant/$id'
     | '/kamar'
     | '/tenant'
+    | '/api/public/seed-demo'
   id:
     | '__root__'
     | '/'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/tenant/$id'
     | '/kamar/'
     | '/tenant/'
+    | '/api/public/seed-demo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -210,6 +222,7 @@ export interface RootRouteChildren {
   TenantIdRoute: typeof TenantIdRoute
   KamarIndexRoute: typeof KamarIndexRoute
   TenantIndexRoute: typeof TenantIndexRoute
+  ApiPublicSeedDemoRoute: typeof ApiPublicSeedDemoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -312,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TenantIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/seed-demo': {
+      id: '/api/public/seed-demo'
+      path: '/api/public/seed-demo'
+      fullPath: '/api/public/seed-demo'
+      preLoaderRoute: typeof ApiPublicSeedDemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -330,6 +350,7 @@ const rootRouteChildren: RootRouteChildren = {
   TenantIdRoute: TenantIdRoute,
   KamarIndexRoute: KamarIndexRoute,
   TenantIndexRoute: TenantIndexRoute,
+  ApiPublicSeedDemoRoute: ApiPublicSeedDemoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
