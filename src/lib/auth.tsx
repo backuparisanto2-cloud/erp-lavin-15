@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Session } from "@supabase/supabase-js";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
 
@@ -31,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [role, setRole] = useState<AppRole | null>(null);
   const [fullName, setFullName] = useState("");
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     let active = true;
@@ -41,16 +43,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, next) => {
       setSession(next ?? null);
       setLoading(false);
+      if (event === "SIGNED_IN" || event === "USER_UPDATED") {
+        void queryClient.invalidateQueries();
+      }
+      if (event === "SIGNED_OUT") {
+        void queryClient.cancelQueries();
+        queryClient.clear();
+      }
     });
 
     return () => {
       active = false;
       sub.subscription.unsubscribe();
     };
-  }, []);
+  }, [queryClient]);
 
   const userId = session?.user.id ?? null;
 
